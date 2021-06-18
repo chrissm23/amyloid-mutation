@@ -14,7 +14,7 @@ The steps of the workflow are:
   * What is the charge of WT and mutants?
   * Determine what the best order of adding ions is:
     * If they have same charge sign, add ions to least charged first.
-    * If they have oppposite charge sign, add ions to WT first, then add ions to mutant, then delete excess of ions.
+    * If they have oppposite charge sign, add ions to the one that has the same charge sign as WT first, then add ions to other mutant, then delete excess of ions.
 
 2. **Add water and ions**
   * Solvate WT and all mutants.
@@ -22,7 +22,7 @@ The steps of the workflow are:
   * Add ions according to above order and strip water with ions and, just in case, amyloid with ions as well.
 
 3. **Intercalate chains of WT and each mutant and merge**
-  * Create a PDB for each mutant intercalated with WT.
+  * Create a PDB for each mutant intercalated with WT or previous mutant.
   * Get chains and residues to add to tiMerge.
   * Combine with respective solvent.
   * Merge according to above data.
