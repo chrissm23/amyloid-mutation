@@ -10,6 +10,7 @@ The steps of the workflow are:
   * What residues are present in the stucture?
   * How many chains are there?
   * Arrange how the chains will be mutated.
+  * Create amyloid mutations.
   * What is the charge of WT and mutants?
   * Determine what the best order of adding ions is:
     * If they have same charge sign, add ions to least charged first.
