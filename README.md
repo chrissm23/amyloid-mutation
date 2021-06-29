@@ -14,7 +14,7 @@ The steps of the workflow are:
   * What is the charge of WT and mutants?
   * Determine what the best order of adding ions is:
     * If they have same charge sign, add ions to least charged first.
-    * If they have oppposite charge sign, add ions to the one that has the same charge sign as WT first, then add ions to other mutant, then delete excess of ions.
+    * If they have oppposite charge sign, add ions to the one that has the same charge sign as WT first, then add ions to other mutant, then balance charge of second solvation to get -charge of first structure.
 
 2. **Add water and ions**
   * Solvate WT and all mutants.
