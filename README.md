@@ -21,7 +21,7 @@ The steps of the workflow are:
   * Strip water.
   * Add ions according to above order and strip water with ions and, just in case, amyloid with ions as well.
 
-3. **Intercalate chains of WT and each mutant and merge**
+3. **Intercalate chains of each pair of structures and merge**
   * Create a PDB for each mutant intercalated with WT or previous mutant.
   * Get chains and residues to add to tiMerge.
   * Combine with respective solvent.
