@@ -1,0 +1,31 @@
+#!/bin/bash
+#
+# Add ions to singe topology
+#
+
+tleap=$AMBERHOME/bin/tleap
+basedir=./%dir%
+
+$tleap -f - <<_EOF
+
+source leaprc.protein.ff14SB
+source leaprc.water.tip3p
+loadAmberParams frcmod.ionsjc_tip3p
+
+# Load single topology and water
+amyloid = loadpdb $basedir/%amyloid%_strip.pdb
+water = loadpdb $basedir/%water%.pdb
+
+single_topology = combine {amyloid water}
+
+set default nocenter on
+
+# Set solvation box
+setBox single_topology vdw {45.0 47.5 46.5}
+addIons single_topology Na+ %ch% 
+addIons single_topology Cl- %ch%
+savepdb single_topology $basedir/single_topology_ions_%onetwo%.pdb
+saveamberparm single_topology $basedir/single_topology_ions_%onetwo%.parm7 $basedir/single_topology_ions_%onetwo%.rst7
+
+quit
+_EOF

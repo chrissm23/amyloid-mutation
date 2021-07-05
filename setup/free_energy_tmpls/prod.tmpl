@@ -1,0 +1,32 @@
+TI simulaion
+ &cntrl
+  imin = 0, nstlim = 12500000, irest = 1, ntx = 5, dt = 0.002,
+  ntt = 3, temp0 = 300.0, gamma_ln = 2.0, ig = -1,
+  ntc = 2, ntf = 1,
+  ntb = 2,
+  ntp = 1, pres0 = 1.0, taup = 2.0,
+  ioutfm = 1, iwrap = 1,
+  ntwe = 1000, ntwx = 1000, ntpr = 10000, ntwr = 20000,
+
+  icfe = 1, ifsc = 1, clambda = %L%, scalpha = 0.5, scbeta = 12.0,
+  logdvdl = 1,
+  ifmbar = 1, mbar_states = %ne%,
+  mbar_lambda = %states% 
+  timask1 = '
+  :%tmask1%
+  ',
+  timask2 = '
+  :%tmask2%
+  ',
+  scmask1 = '
+  :%smask1%
+  ', 
+  scmask2 = '
+  :%smask2%
+  ',
+
+ /
+
+ &ewald
+ /
+
