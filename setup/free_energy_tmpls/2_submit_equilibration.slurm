@@ -11,7 +11,7 @@
 #SBATCH --mail-user=ch.sustay@physik.uni-muenchen.de
 #
 
-module load amber
+module load amber/20.0/20.4
 
 source ../../../windows_res
 
