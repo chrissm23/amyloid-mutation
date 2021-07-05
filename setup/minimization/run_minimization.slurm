@@ -11,7 +11,7 @@
 #SBATCH --mail-user=ch.sustay@physik.uni-muenchen.de
 #
 
-module load amber
+module load amber/20.0/20.4
 
 prmtop=../merged_topology.parm7
 inpcrd=../solvation_correction/press.rst7
