@@ -12,7 +12,7 @@
 #SBATCH --mail-user=ch.sustay@physik.uni-muenchen.de
 #
 
-module load amber
+module load amber/20.0/20.4
 
 windows=(0.0 0.1 0.2 0.3 0.4 0.5)
 
