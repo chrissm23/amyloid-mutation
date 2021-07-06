@@ -140,7 +140,7 @@ def merge(nres, res_min, res_max, nchains, structure1, structure2):
     subprocess.call(path_merge)
     print("Merging finished.")
 
-def in_files_setup(nres, res_min, res_max, nchains, structure1, structure2):
+def in_files_setup(nres, resname, res_min, res_max, nchains, structure1, structure2):
     """Copies and fills out input files for solvation correction and minimization"""
     [amyloid1, amyloid2] = recover_transformation_order(structure1, structure2)
     charge1 = get_data.get_charge(amyloid1[0])
@@ -253,6 +253,11 @@ def in_files_setup(nres, res_min, res_max, nchains, structure1, structure2):
         "%reswt%": reswt_str,
         "%resmut%": resmut_str
     }
+    replace_dict2 = {
+        "%r%": str(nres),
+        "%rn%": resname,
+        "%pairID%": dir
+    }
     
     newdir = f'./{dir}/solvation_correction'
     if not os.path.exists(newdir):
@@ -261,6 +266,7 @@ def in_files_setup(nres, res_min, res_max, nchains, structure1, structure2):
         copyfile(f'./tmpls/{x}.tmpl', f'{newdir}/{x}.in')
         solvate.replace_in_file(f'{newdir}/{x}.in', replace_dict)
     copyfile('./solvation_correction/run_simulations.slurm', f'{newdir}/run_simulations.slurm')
+    solvate.replace_in_file(f'{newdir}/run_simulations.slurm', replace_dict2)
 
     newdir = f'./{dir}/minimization'
     if not os.path.exists(newdir):
@@ -268,6 +274,7 @@ def in_files_setup(nres, res_min, res_max, nchains, structure1, structure2):
     copyfile('./tmpls/minimization.tmpl', f'{newdir}/minimization.in')
     solvate.replace_in_file(f'{newdir}/minimization.in', replace_dict)
     copyfile('./minimization/run_minimization.slurm', f'{newdir}/run_minimization.slurm')
+    solvate.replace_in_file(f'{newdir}/run_minimization.slurm', replace_dict2)
 
     return [reswt_str, resmut_str]
 
@@ -306,8 +313,8 @@ def create_free_energy_dir(nres, resname, reswt_str, resmut_str, structure1, str
 
 
 if __name__ == "__main__":
-    structure1 = [PandasPdb().read_pdb('./leap/5kk3.pdb'), "mutant_1"]
-    structure2 = [PandasPdb().read_pdb('./leap/mutant_1.pdb'), "mutant_2"]
+    structure1 = [PandasPdb().read_pdb('./leap/5kk3.pdb'), "WT"]
+    structure2 = [PandasPdb().read_pdb('./leap/mutant_1.pdb'), "mutant_1"]
     nres = 34
     resname = "VAL"
     reswt_str = "23,66,109,152,195,238,281,324,367,410,453,496,539,582,625,668,711,754"
