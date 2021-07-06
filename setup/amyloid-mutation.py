@@ -52,6 +52,6 @@ for index, value in enumerate(order):
     # Intercalate and merged structures
     intercalate_n_merge.intercalate(structure1, structure2)
     intercalate_n_merge.merge(nres, res_min, res_max, nchains, structure1, structure2)
-    [reswt_str, resmut_str] = intercalate_n_merge.in_files_setup(nres, res_min, res_max, nchains, structure1, structure2)
+    [reswt_str, resmut_str] = intercalate_n_merge.in_files_setup(nres, resname, res_min, res_max, nchains, structure1, structure2)
     
-    intercalate_n_merge.create_free_energy_dir(reswt_str, resmut_str, structure1, structure2)
+    intercalate_n_merge.create_free_energy_dir(nres, resname, reswt_str, resmut_str, structure1, structure2)
