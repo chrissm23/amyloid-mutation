@@ -1,0 +1,16 @@
+Pendientes que realizar mientras se van haciendo las simulaciones
+
+1. Funcion que agrega restraintmask a prod_restraints.tmpl dadas las chainIDs
+   del borde del amiloide. Las chainIDs se daran en el archivo windows_res.
+
+Los siguientes seran funciones separadas del setup porque dependen mucho de
+cosas variables de como el PDB original fue construido.
+
+2. Funcion que elimine capas de mas del amiloide. Dependiendo de como esten
+   enumeradas, eliminar una capa o fittear un plano en base a las cordenadas de
+   cierto amino acido y eliminar un plano de los extremos.
+3. Funcion que agrega capas al amiloide. Si el amiloide es suficientemente
+   regular, solo copiar las ultimas capas o el amiloide entero y trasladarlo
+   encima del original. Si con esto hay muchos contactos mejor tomar capas mas
+   regulares y copiarlas muchas veces trasladandolas encima.
+4. Funcion que agregue chainIDs a PDB creado por leap.
