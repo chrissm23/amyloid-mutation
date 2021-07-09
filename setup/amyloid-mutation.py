@@ -20,6 +20,7 @@ tiatoms_total = tiatoms*nchains
 
 # Arrange how chains will be mutated and create mutants
 n_mutants = tiatoms_total//500 + (tiatoms_total % 500 > 0)
+nchains_p_mutant = [int((i+1)*nchains/n_mutants) for i in list(range(n_mutants))]
 mutants = get_data.create_mutants(og_structure, n_mutants, nchains, nres, resname)
 og_structure = PandasPdb().read_pdb('./leap/5kk3.pdb')
 
