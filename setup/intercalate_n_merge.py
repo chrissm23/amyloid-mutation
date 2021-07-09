@@ -149,7 +149,7 @@ def in_files_setup(nres, resname, res_min, res_max, nchains, structure1, structu
     n_resids = res_max - res_min + 1
     nres_new = nres - res_min + 1
 
-    reswt = [f'{i*n_resids + nres_new}' for i in range(nchains)]
+    reswt = [f'{i*(n_resids + 1) + nres_new}' for i in range(nchains)]
     reswt_str = ','.join(reswt)
     resmut = [f'{(i+1)*(n_resids + 1)}' for i in range(nchains)]
     resmut_str = ','.join(resmut)
