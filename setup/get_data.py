@@ -8,87 +8,68 @@ def get_res_resname(windows_res_file):
 
     nres = int(rows[1][3])
     resname = rows[1][4][:-1]
+    boundary_chains = rows[1][5][:-1]
 
-    return [nres, resname]
+    return [nres, resname, boundary_chains]
 
-def get_amyloid_info(og_structure):
-    """Get what residues constitute the amyloid structure and its number of chains"""
-    res_min = og_structure.df['ATOM']['residue_number'].loc[og_structure.df['ATOM']['chain_id'] == 'A'].min()
-    res_max = og_structure.df['ATOM']['residue_number'].loc[og_structure.df['ATOM']['chain_id'] == 'A'].max()
-    nchains = og_structure.df['ATOM']['chain_id'].nunique()
-
-    return [res_min, res_max, nchains]
-
-def get_tiatoms(og_structure, nres, resname):
-    """Get number of ti atoms per chain"""
-    amino_acid_natoms = {
-        "ALA": 13,
-        "ARG": 26,
-        "ASN": 17,
-        "ASP": 16,
-        "CYS": 14,
-        "GLN": 20,
-        "GLU": 19,
-        "GLY": 10,
-        "HIS": 20,
-        "ILE": 22,
-        "LEU": 22,
-        "LYS": 24,
-        "MET": 20,
-        "PHE": 23,
-        "PRO": 17,
-        "SER": 14,
-        "THR": 17,
-        "TRP": 27,
-        "TYR": 24,
-        "VAL": 19,
-        "HIP": 20
-    }
-    tiatoms_mt = amino_acid_natoms[resname]
-    aa_wt = og_structure.df['ATOM']['residue_name'].loc[og_structure.df['ATOM']['residue_number'] == nres].iloc[0]
-    tiatoms_wt = amino_acid_natoms[aa_wt]
-    tiatoms = tiatoms_wt + tiatoms_mt
-
-    return tiatoms
-
-def create_mutants(og_structure, n_mutants, nchains, nres, resname):
+def create_mutants(amyloid_WT):
     """Create PDBs of the mutants separating according to the amount of mutants required"""
-    nchains_p_mutant = [int((i+1)*nchains/n_mutants) for i in list(range(n_mutants))]
-    chain_ids = og_structure.df['ATOM']['chain_id'].unique()
-    mutant = og_structure
-    for j in list(range(nchains)):
+    nchains_p_mutant = [int((i+1)*amyloid_WT.nchains/amyloid_WT.n_mutants) for i in list(range(amyloid_WT.n_mutants))]
+    chain_ids = amyloid_WT.biopandas_pdb.df['ATOM']['chain_id'].unique()
+    mutant = amyloid_WT.biopandas_pdb
+    for j in list(range(amyloid_WT.nchains)):
         mutant.df['ATOM']['residue_name'].loc[
-            (mutant.df['ATOM']['chain_id'] == chain_ids[j]) & (mutant.df['ATOM']['residue_number'] == nres)] = resname
+            (mutant.df['ATOM']['chain_id'] == chain_ids[j]) & (mutant.df['ATOM']['residue_number'] == amyloid_WT.nres)] = amyloid_WT.resname
         mutant.df['ATOM'] = mutant.df['ATOM'].drop(
-            mutant.df['ATOM'][(mutant.df['ATOM']['chain_id'] == chain_ids[j]) & (mutant.df['ATOM']['residue_number'] == nres) &
+            mutant.df['ATOM'][(mutant.df['ATOM']['chain_id'] == chain_ids[j]) & (mutant.df['ATOM']['residue_number'] == amyloid_WT.nres) &
             (mutant.df['ATOM']['atom_name']!="CA") & (mutant.df['ATOM']['atom_name']!="C") & (mutant.df['ATOM']['atom_name']!="O") &
             (mutant.df['ATOM']['atom_name']!="N")].index)
         if j+1 in nchains_p_mutant:
             mutant_idx = nchains_p_mutant.index(j+1)
             mutant.to_pdb(path=f'./leap/mutant_{mutant_idx + 1}.pdb', records=None, gz=False, append_newline=True)
     
-    mutants = [PandasPdb().read_pdb(f'./leap/mutant_{x+1}.pdb') for x in list(range(n_mutants))]
-    return mutants
+    mutants_pdb = [PandasPdb().read_pdb(f'./leap/mutant_{x+1}.pdb') for x in list(range(amyloid_WT.n_mutants))]
+    return mutants_pdb, nchains_p_mutant
 
-def get_charge(pdb_structure):
-    """Get the charge of the structure feeded"""
-    charged_aa = {
-    "ASP": -1,
-    "GLU": -1,
-    "CYS": 1,
-    "LYS": 1,
-    "HIP": 1
+def num_to_chains(nchains_p_mutant):
+    """Change chains per mutant to list of mutated chains"""
+    num_to_alph = {
+        1: "A",
+        2: "B",
+        3: "C",
+        4: "D",
+        5: "E",
+        6: "F",
+        7: "G",
+        8: "H",
+        9: "I",
+        10: "J",
+        11: "K",
+        12: "L",
+        13: "M",
+        14: "N",
+        15: "O",
+        16: "P",
+        17: "Q",
+        18: "R",
+        19: "S",
+        20: "T",
+        21: "U",
+        22: "V",
+        23: "W",
+        24: "X",
+        25: "Y",
+        26: "Z",
+        27: "AA",
+        28: "AB",
+        29: "AC",
+        30: "AD",
+        31: "AE",
+        32: "AF"
     }
-    charge = 0
-    chain_ids = pdb_structure.df['ATOM']['chain_id'].unique()
-    res_nums = pdb_structure.df['ATOM']['residue_number'].unique()
-    for x in chain_ids:
-        for y in res_nums:
-            res_seq = pdb_structure.df['ATOM'].groupby(['chain_id']).get_group(x).groupby(['residue_number']).get_group(y)['residue_name'].iloc[0]
-            if res_seq in charged_aa:
-                charge += charged_aa[res_seq]
     
-    return charge
+    mutated_chains = [[num_to_alph[j+1] for j in range(nchains_p_mutant[i])] for i in nchains_p_mutant]
+    return mutated_chains
 
 def get_order(charges):
     order = []
@@ -111,11 +92,8 @@ def get_order(charges):
             order.append(i)
     return order
 
-
 if __name__ == "__main__":
-    [nres, resname] = get_res_resname('../windows_res')
-    og_structure = PandasPdb().read_pdb('./leap/5kk3.pdb')
-    chains_ids = og_structure.df['ATOM']['chain_id'].unique()
-    res_nums = og_structure.df['ATOM']['residue_number'].unique()
-    res_seq = og_structure.df['ATOM'].groupby(['chain_id']).get_group(chains_ids[0]).groupby(['residue_number']).get_group(res_nums[0])['residue_name'].iloc[0]
-    print(res_seq)
+    windows_res_file = '../windows_res'
+    [nres, resname, boundary_chains] = get_res_resname(windows_res_file)
+    boundary_chains1 = boundary_chains.split(',')
+    print(boundary_chains1)

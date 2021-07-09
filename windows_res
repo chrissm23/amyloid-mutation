@@ -3,4 +3,4 @@ windows+=()
 windows=($(printf "%s\n" "${windows[@]}" | sort -n))
 res=34
 resname=VAL
-boundary_chains=
+boundary_chains=A,I,J,R

@@ -1,3 +1,4 @@
+from amyloid import Mutant
 import numpy as np
 import pandas as pd
 from biopandas.pdb import PandasPdb
@@ -72,8 +73,8 @@ def intercalate(structure1, structure2):
     [amyloid1, amyloid2] = recover_transformation_order(structure1, structure2)
     amyloid1_pdb = PandasPdb().read_pdb(f'./{dir}/{amyloid1[1]}_strip.pdb')
     amyloid2_pdb = PandasPdb().read_pdb(f'./{dir}/{amyloid2[1]}_strip.pdb')
-    nchains = structure1[0].df['ATOM']['chain_id'].nunique()
-    nres_pchain = structure1[0].df['ATOM']['residue_number'].nunique()
+    nchains = structure1[0].nchains
+    nres_pchain = structure1[0].n_residues
     nres_min1 = amyloid1_pdb.df['ATOM']['residue_number'].min()
     nres_min2 = amyloid2_pdb.df['ATOM']['residue_number'].min()
     chains_to_intercalate = ''
@@ -109,17 +110,26 @@ def intercalate(structure1, structure2):
     subprocess.call(path_intercalate)
     print("Intercalation finished.")
 
-def merge(nres, res_min, res_max, nchains, structure1, structure2):
+def merge(structure1, structure2):
     """Get masks to be used in tiMerge"""
-    n_resids = res_max - res_min + 1
-    nres_new = nres - res_min + 1
-    chains_WT = [f'{i*n_resids + 1}-{(i+1)*n_resids}' for i in range(2*nchains) if i%2 == 0]
+    n_resids = structure1[0].n_residues
+    nres_new = structure1[0].nres_new
+    if isinstance(structure1[0], Mutant) and isinstance(structure2[0], Mutant):
+        bound1 = len(structure1[0].mutated_chains)
+        bound2 = len(structure2[0].mutated_chains)
+        chains = range(2*min(bound1, bound2), 2*max(bound1, bound2))
+    else:
+        if isinstance(structure1[0], Mutant):
+            chains = range(2*len(structure1[0].mutated_chains))
+        elif isinstance(structure2[0], Mutant):
+            chains = range(2*len(structure2[0].mutated_chains))
+    chains_WT = [f'{i*n_resids + 1}-{(i+1)*n_resids}' for i in range(2*structure1[0].nchains) if i%2 == 0]
     chains_WT_str = ','.join(chains_WT)
-    chains_MUT = [f'{i*n_resids + 1}-{(i+1)*n_resids}' for i in range(2*nchains) if (i+1)%2 == 0]
+    chains_MUT = [f'{i*n_resids + 1}-{(i+1)*n_resids}' for i in range(2*structure2[0].nchains) if (i+1)%2 == 0]
     chains_MUT_str = ','.join(chains_MUT)
-    resids_WT = [f'{i*n_resids + nres_new}' for i in range(2*nchains) if i%2 == 0]
+    resids_WT = [f'{i*n_resids + nres_new}' for i in chains if i%2 == 0]
     resids_WT_str = ','.join(resids_WT)
-    resids_MUT = [f'{i*n_resids + nres_new}' for i in range(2*nchains) if (i+1)%2 == 0]
+    resids_MUT = [f'{i*n_resids + nres_new}' for i in chains if (i+1)%2 == 0]
     resids_MUT_str = ','.join(resids_MUT)
 
     dir = f'{structure1[1]}_{structure2[1]}'
@@ -140,15 +150,19 @@ def merge(nres, res_min, res_max, nchains, structure1, structure2):
     subprocess.call(path_merge)
     print("Merging finished.")
 
-def in_files_setup(nres, resname, res_min, res_max, nchains, structure1, structure2):
+def in_files_setup(structure1, structure2):
     """Copies and fills out input files for solvation correction and minimization"""
     [amyloid1, amyloid2] = recover_transformation_order(structure1, structure2)
-    charge1 = get_data.get_charge(amyloid1[0])
-    charge2 = get_data.get_charge(amyloid2[0])
+    charge1 = amyloid1[0].charge
+    charge2 = amyloid2[0].charge
 
-    reswt = [f'{i*(res_max + 1) + nres-res_min}' for i in range(nchains)]
+    n_resids = structure1[0].n_residues
+    nres_new = structure1[0].nres_new
+    nchains = structure1[0].nchains
+
+    reswt = [f'{i*(n_resids + 1) + nres_new}' for i in range(nchains)]
     reswt_str = ','.join(reswt)
-    resmut = [f'{(i+1)*(res_max+1)}' for i in range(nchains)]
+    resmut = [f'{(i+1)*(n_resids + 1)}' for i in range(nchains)]
     resmut_str = ','.join(resmut)
 
     dir = f'{structure1[1]}_{structure2[1]}'
@@ -278,7 +292,49 @@ def in_files_setup(nres, resname, res_min, res_max, nchains, structure1, structu
 
     return [reswt_str, resmut_str]
 
-def create_free_energy_dir(nres, resname, reswt_str, resmut_str, structure1, structure2):
+def get_boundary_chains(structure):
+    num_to_alph = {
+        1: "A",
+        2: "B",
+        3: "C",
+        4: "D",
+        5: "E",
+        6: "F",
+        7: "G",
+        8: "H",
+        9: "I",
+        10: "J",
+        11: "K",
+        12: "L",
+        13: "M",
+        14: "N",
+        15: "O",
+        16: "P",
+        17: "Q",
+        18: "R",
+        19: "S",
+        20: "T",
+        21: "U",
+        22: "V",
+        23: "W",
+        24: "X",
+        25: "Y",
+        26: "Z",
+        27: "AA",
+        28: "AB",
+        29: "AC",
+        30: "AD",
+        31: "AE",
+        32: "AF"
+    }
+    chain_number = [list(num_to_alph.keys())[list(num_to_alph.values()).index(x)] for x in structure.boundary_chains]
+    n_residues = structure.n_residues
+    chains_residues = [f'{(n_residues+1)*(chain_number[x]-1) + 1}-{(n_residues+1)*(chain_number[x])}' for x in structure.boundary_chains]
+    boundary_chains_str = ','.join(chains_residues)
+
+    return boundary_chains_str
+
+def create_free_energy_dir(reswt_str, resmut_str, structure1, structure2):
     """Create directory for free energy simulations and copy templates from free_energy_tmpls"""
     dir = f'{structure1[1]}_{structure2[1]}'
     new_dir = f'./{dir}/free_energy'
@@ -290,19 +346,21 @@ def create_free_energy_dir(nres, resname, reswt_str, resmut_str, structure1, str
     for file_name in src_files:
         full_file_name = os.path.join(src, file_name)
         copyfile(full_file_name, f'{new_dir}/{file_name}')
-    
+
+    boundary_chains_str = get_boundary_chains(structure1[0].boundary_chains)
     replace_dict1 = {
         "%tmask1%": reswt_str,
         "%tmask2%": reswt_str,
         "%smask1%": resmut_str,
-        "%smask2%": resmut_str
+        "%smask2%": resmut_str,
+        "%rmask%": boundary_chains_str
     }
-    for x in ["heat", "prod"]:
+    for x in ["heat", "prod", "prod_restraint"]:
         solvate.replace_in_file(f'{new_dir}/{x}.tmpl', replace_dict1)
 
     replace_dict2 = {
-        "%r%": str(nres),
-        "%rn%": resname,
+        "%r%": str(structure1[0].nres),
+        "%rn%": structure1[0].resname,
         "%dir%": dir
     }
     for x in ["2_submit_equilibration.slurm", "4_submit_production.slurm"]:

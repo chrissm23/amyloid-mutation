@@ -5,29 +5,30 @@ import fileinput
 from shutil import copyfile
 import os
 
+import amyloid
 import get_data
 import solvate
 import intercalate_n_merge
 
 # Get info about the mutation
-[nres, resname] = get_data.get_res_resname('../windows_res')
+[nres, resname, boundary_chains] = get_data.get_res_resname('../windows_res')
+boundary_chains = boundary_chains.split(',')
 
 # Get info about the amyloid structure
 og_structure = PandasPdb().read_pdb('./leap/5kk3.pdb')
-[res_min, res_max, nchains] = get_data.get_amyloid_info(og_structure)
-tiatoms = get_data.get_tiatoms(og_structure, nres, resname)
-tiatoms_total = tiatoms*nchains
+amyloid_WT = amyloid.Amyloid(og_structure, nres, resname, boundary_chains)
 
 # Arrange how chains will be mutated and create mutants
-n_mutants = tiatoms_total//500 + (tiatoms_total % 500 > 0)
-nchains_p_mutant = [int((i+1)*nchains/n_mutants) for i in list(range(n_mutants))]
-mutants = get_data.create_mutants(og_structure, n_mutants, nchains, nres, resname)
+mutants_pdb, nchains_p_mutant = get_data.create_mutants(amyloid_WT)
+mutated_chains = get_data.num_to_chains(nchains_p_mutant)
+mutants = [amyloid.Mutant(mutants_pdb[i], nres, resname, boundary_chains, mutated_chains[i]) for i in range(len(mutants_pdb))]
 og_structure = PandasPdb().read_pdb('./leap/5kk3.pdb')
+amyloid_WT = amyloid.Amyloid(og_structure, nres, resname, boundary_chains)
 
-# Calculate charges and get order of solvation
-charges = [get_data.get_charge(mutant) for mutant in mutants]
-charges = [get_data.get_charge(og_structure)] + charges
-mutants = [og_structure] + mutants
+# Get order of solvation
+charges = [x.charge for x in mutants]
+charges = [amyloid_WT.charge] + charges
+mutants = [amyloid_WT] + mutants
 order = get_data.get_order(charges)
 
 # Solvate and strip water and ions
@@ -49,10 +50,10 @@ for index, value in enumerate(order):
     solvate.solvate(structure1, structure2)
     solvate.strip(structure1, structure2)
     solvate.solvate_ions_pair(structure1, structure2)
-    
+
     # Intercalate and merged structures
     intercalate_n_merge.intercalate(structure1, structure2)
-    intercalate_n_merge.merge(nres, res_min, res_max, nchains, structure1, structure2)
-    [reswt_str, resmut_str] = intercalate_n_merge.in_files_setup(nres, resname, res_min, res_max, nchains, structure1, structure2)
+    intercalate_n_merge.merge(structure1, structure2)
+    [reswt_str, resmut_str] = intercalate_n_merge.in_files_setup(structure1, structure2)
     
-    intercalate_n_merge.create_free_energy_dir(nres, resname, reswt_str, resmut_str, structure1, structure2)
+    intercalate_n_merge.create_free_energy_dir(reswt_str, resmut_str, structure1, structure2)

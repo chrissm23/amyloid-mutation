@@ -4,8 +4,6 @@ from shutil import copyfile
 import os
 import subprocess
 
-import get_data
-
 def make_executable(path):
     """Make file executable"""
     mode = os.stat(path).st_mode
@@ -24,8 +22,8 @@ def replace_in_file(path, replace_dict):
 def solvate(structure1, structure2):
     """Delete hydrogens from structures and solvate dual topology using leap from solvate.tmpl"""
     for structure in [structure1, structure2]:
-        structure[0].df['ATOM'] = structure[0].df['ATOM'][structure[0].df['ATOM']['element_symbol']!="H"]
-        structure[0].to_pdb(path=f'./leap/{structure[1]}_nohyd.pdb', records=None, gz=False, append_newline=True)
+        structure[0].biopandas_pdb.df['ATOM'] = structure[0].biopandas_pdb.df['ATOM'][structure[0].biopandas_pdb.df['ATOM']['element_symbol']!="H"]
+        structure[0].biopandas_pdb.to_pdb(path=f'./leap/{structure[1]}_nohyd.pdb', records=None, gz=False, append_newline=True)
 
     new_dir = f'{structure1[1]}_{structure2[1]}'
     if not os.path.exists(new_dir):
@@ -50,12 +48,8 @@ def strip(structure1, structure2):
     if not os.path.exists(dir):
         raise FileNotFoundError('Directory with that selection and order of structures does not exist.')
 
-    nres_pchain_1 = structure1[0].df['ATOM']['residue_number'].nunique()
-    nchains_1 = structure1[0].df['ATOM']['chain_id'].nunique()
-    nres_1 = nres_pchain_1*nchains_1
-    nres_pchain_2 = structure2[0].df['ATOM']['residue_number'].nunique()
-    nchains_2 = structure2[0].df['ATOM']['chain_id'].nunique()
-    nres_2 = nres_pchain_2*nchains_2
+    nres_1 = structure1[0].n_residues*structure1[0].nchains
+    nres_2 = structure2[0].n_residues*structure2[0].nchains
     nres_dual = nres_1 + nres_2
 
     path_strip = f'./{dir}/strip.sh'
@@ -116,9 +110,7 @@ def strip_ions(structure, path, second):
         single_topology = PandasPdb().read_pdb(f'./{path}/single_topology_ions_2.pdb')
         nres_pions = single_topology.df['ATOM'].loc[single_topology.df['ATOM']['residue_name']!='WAT']['residue_number'].max()
     
-    nres_pchain = structure[0].df['ATOM']['residue_number'].nunique()
-    nchains = structure[0].df['ATOM']['chain_id'].nunique()
-    nres = nres_pchain*nchains
+    nres = structure[0].n_residues*structure[0].nchains
     
     path_strip_ions = f'./{path}/strip_ions_{one_or_two}.sh'
     copyfile('./solvate/strip_ions.tmpl', path_strip_ions)
@@ -142,8 +134,8 @@ def solvate_ions_pair(structure1, structure2):
     
     solvate_ions_structure(structure1, 0, dir, second=False)
     strip_ions(structure1, dir, second=False)
-    charge1 = get_data.get_charge(structure1[0])
-    charge2 = get_data.get_charge(structure2[0])
+    charge1 = structure1[0].charge
+    charge2 = structure2[0].charge
     if charge1*charge2 > 0:
         charge = 0
     else:
