@@ -146,9 +146,12 @@ def in_files_setup(nres, resname, res_min, res_max, nchains, structure1, structu
     charge1 = get_data.get_charge(amyloid1[0])
     charge2 = get_data.get_charge(amyloid2[0])
 
-    reswt = [f'{i*(res_max + 1) + nres-res_min}' for i in range(nchains)]
+    n_resids = res_max - res_min + 1
+    nres_new = nres - res_min + 1
+
+    reswt = [f'{i*n_resids + nres_new}' for i in range(nchains)]
     reswt_str = ','.join(reswt)
-    resmut = [f'{(i+1)*(res_max+1)}' for i in range(nchains)]
+    resmut = [f'{(i+1)*(n_resids + 1)}' for i in range(nchains)]
     resmut_str = ','.join(resmut)
 
     dir = f'{structure1[1]}_{structure2[1]}'
