@@ -350,8 +350,8 @@ def create_free_energy_dir(reswt_str, resmut_str, structure1, structure2):
     boundary_chains_str = get_boundary_chains(structure1[0])
     replace_dict1 = {
         "%tmask1%": reswt_str,
-        "%tmask2%": reswt_str,
-        "%smask1%": resmut_str,
+        "%tmask2%": resmut_str,
+        "%smask1%": reswt_str,
         "%smask2%": resmut_str,
         "%rmask%": boundary_chains_str
     }
