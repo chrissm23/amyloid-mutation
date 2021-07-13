@@ -68,7 +68,7 @@ def num_to_chains(nchains_p_mutant):
         32: "AF"
     }
     
-    mutated_chains = [[num_to_alph[j+1] for j in range(nchains_p_mutant[i])] for i in nchains_p_mutant]
+    mutated_chains = [[num_to_alph[j+1] for j in range(x)] for x in nchains_p_mutant]
     return mutated_chains
 
 def get_order(charges):
