@@ -347,7 +347,7 @@ def create_free_energy_dir(reswt_str, resmut_str, structure1, structure2):
         full_file_name = os.path.join(src, file_name)
         copyfile(full_file_name, f'{new_dir}/{file_name}')
 
-    boundary_chains_str = get_boundary_chains(structure1[0].boundary_chains)
+    boundary_chains_str = get_boundary_chains(structure1[0])
     replace_dict1 = {
         "%tmask1%": reswt_str,
         "%tmask2%": reswt_str,
