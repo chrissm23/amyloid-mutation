@@ -329,7 +329,7 @@ def get_boundary_chains(structure):
     }
     chain_number = [list(num_to_alph.keys())[list(num_to_alph.values()).index(x)] for x in structure.boundary_chains]
     n_residues = structure.n_residues
-    chains_residues = [f'{(n_residues+1)*(chain_number[x]-1) + 1}-{(n_residues+1)*(chain_number[x])}' for x in structure.boundary_chains]
+    chains_residues = [f'{(n_residues+1)*(chain_number[x]-1) + 1}-{(n_residues+1)*(chain_number[x])}' for x in range(len(structure.boundary_chains))]
     boundary_chains_str = ','.join(chains_residues)
 
     return boundary_chains_str
