@@ -268,8 +268,8 @@ def in_files_setup(structure1, structure2):
         "%resmut%": resmut_str
     }
     replace_dict2 = {
-        "%r%": str(nres),
-        "%rn%": resname,
+        "%r%": str(structure1[0].nres),
+        "%rn%": structure1[0].resname,
         "%pairID%": dir
     }
     
