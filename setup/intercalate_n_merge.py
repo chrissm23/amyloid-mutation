@@ -160,10 +160,23 @@ def in_files_setup(structure1, structure2):
     nres_new = structure1[0].nres_new
     nchains = structure1[0].nchains
 
-    reswt = [f'{i*(n_resids + 1) + nres_new}' for i in range(nchains)]
+    if isinstance(structure1[0], Mutant) and isinstance(structure2[0], Mutant):
+        bound1 = len(structure1[0].mutated_chains)
+        bound2 = len(structure2[0].mutated_chains)
+        chains = range(min(bound1, bound2), max(bound1, bound2))
+    else:
+        if isinstance(structure1[0], Mutant):
+            chains = range(len(structure1[0].mutated_chains))
+        elif isinstance(structure2[0], Mutant):
+            chains = range(len(structure2[0].mutated_chains))
+
+    print(list(chains))
+    reswt = [f'{i*(n_resids + 1) + nres_new - min(chains)}' for i in chains]
     reswt_str = ','.join(reswt)
-    resmut = [f'{(i+1)*(n_resids + 1)}' for i in range(nchains)]
+    resmut = [f'{(i+1)*(n_resids + 1) - min(chains)}' for i in chains]
     resmut_str = ','.join(resmut)
+    print(reswt_str)
+    print(resmut_str)
 
     dir = f'{structure1[1]}_{structure2[1]}'
     dual_topology = PandasPdb().read_pdb(f'./{dir}/dual_topology_ions.pdb')
@@ -371,10 +384,10 @@ def create_free_energy_dir(reswt_str, resmut_str, structure1, structure2):
 
 
 if __name__ == "__main__":
-    structure1 = [PandasPdb().read_pdb('./leap/5kk3.pdb'), "WT"]
-    structure2 = [PandasPdb().read_pdb('./leap/mutant_1.pdb'), "mutant_1"]
+    structure1 = [PandasPdb().read_pdb('./leap/mutant_1.pdb'), "mutant_1"]
+    structure2 = [PandasPdb().read_pdb('./leap/mutant_2.pdb'), "mutant_2"]
     nres = 34
     resname = "VAL"
     reswt_str = "23,66,109,152,195,238,281,324,367,410,453,496,539,582,625,668,711,754"
     resmut_str = "43,86,129,172,215,258,301,344,387,430,473,516,559,602,645,688,731,774"
-    create_free_energy_dir(nres, resname, reswt_str, resmut_str, structure1, structure2)
+    in_files_setup(structure1, structure2)
