@@ -4,7 +4,7 @@
 # necessary modifications
 #
 
-source ../../../windows_res
+source ../../windows_res
 states=($(printf "%s," "${windows[@]}"))
 nstates=${#windows[@]}
 
