@@ -2,6 +2,7 @@
 #
 # Submit simulations to cow. 
 # REMEMBER TO ADD WINDOW SET TO JOB NAME AND CHANGE WINDOWS
+# REMEMBER TO ADD -ref FILE WHEN USING RESTRAINTS
 #
 #SBATCH --job-name=%r%_%rn%_prod_%dir%_
 #SBATCH --time=4-23:59:59
