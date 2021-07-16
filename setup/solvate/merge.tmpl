@@ -1,0 +1,15 @@
+#!/bin/bash
+#
+# Use ParmEd with tiMerge command to create new topology and coordinate files
+# with only mutated residues duplicated and properly linked to the protein
+#
+
+parmed=$AMBERHOME/bin/parmed
+
+$parmed ./%dir%/dual_topology_ions.parm7 <<_EOF
+loadRestrt ./%dir%/dual_topology_ions.rst7
+setOverwrite True
+tiMerge :%chains_WT% :%chains_MUT% :%resids_WT% :%resids_MUT%
+outparm ./%dir%/merged_topology.parm7 ./%dir%/merged_topology.rst7
+quit
+_EOF

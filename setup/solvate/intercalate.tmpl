@@ -1,0 +1,30 @@
+#!/bin/bash
+#
+# Combine chains to have them intercalated
+#
+
+tleap=$AMBERHOME/bin/tleap
+basedir=./%dir%
+
+$tleap -f - <<_EOF
+# Load force fields
+source leaprc.protein.ff14SB
+source leaprc.water.tip3p
+loadAmberParams frcmod.ionsjc_tip3p
+
+# Load the coordinates and create systems
+%chains_to_intercalate%
+w = loadpdb $basedir/water_ions_2.pdb
+
+dual_topology = combine {%chains%w}
+
+set default nocenter on
+
+# Create peptide in solution
+setBox dual_topology vdw {45.0 47.5 46.6}
+savepdb dual_topology $basedir/dual_topology_ions.pdb
+saveamberparm dual_topology $basedir/dual_topology_ions.parm7 $basedir/dual_topology_ions.rst7
+
+quit
+_EOF
+
