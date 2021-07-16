@@ -170,13 +170,13 @@ def in_files_setup(structure1, structure2):
         elif isinstance(structure2[0], Mutant):
             chains = range(len(structure2[0].mutated_chains))
 
-    print(list(chains))
+    #print(list(chains))
     reswt = [f'{i*(n_resids + 1) + nres_new - min(chains)}' for i in chains]
     reswt_str = ','.join(reswt)
     resmut = [f'{(i+1)*(n_resids + 1) - min(chains)}' for i in chains]
     resmut_str = ','.join(resmut)
-    print(reswt_str)
-    print(resmut_str)
+    #print(reswt_str)
+    #print(resmut_str)
 
     dir = f'{structure1[1]}_{structure2[1]}'
     dual_topology = PandasPdb().read_pdb(f'./{dir}/dual_topology_ions.pdb')
