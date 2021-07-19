@@ -13,7 +13,7 @@
 
 module load amber/20.0/20.4
 
-source ../../../windows_res
+source ../../windows_res
 
 cd equilibration
 
