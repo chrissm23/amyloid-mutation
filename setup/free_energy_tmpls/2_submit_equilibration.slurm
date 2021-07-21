@@ -3,7 +3,7 @@
 # Submit simulations to cow. REMEMBER TO ADD JOB NAME
 #
 #SBATCH --job-name=%r%_%rn%_equil_%dir%
-#SBATCH --time=4-23:59:59
+#SBATCH --time=1-23:59:59
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --gres=gpu:1
