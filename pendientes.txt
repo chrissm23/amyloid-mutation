@@ -1,16 +1,50 @@
-Pendientes que realizar mientras se van haciendo las simulaciones
-
-1. Funcion que agrega restraintmask a prod_restraints.tmpl dadas las chainIDs
-   del borde del amiloide. Las chainIDs se daran en el archivo windows_res.
-
 Los siguientes seran funciones separadas del setup porque dependen mucho de
 cosas variables de como el PDB original fue construido.
 
-2. Funcion que elimine capas de mas del amiloide. Dependiendo de como esten
+1. Funcion que elimine capas de mas del amiloide. Dependiendo de como esten
    enumeradas, eliminar una capa o fittear un plano en base a las cordenadas de
    cierto amino acido y eliminar un plano de los extremos.
-3. Funcion que agrega capas al amiloide. Si el amiloide es suficientemente
+2. Funcion que agrega capas al amiloide. Si el amiloide es suficientemente
    regular, solo copiar las ultimas capas o el amiloide entero y trasladarlo
    encima del original. Si con esto hay muchos contactos mejor tomar capas mas
    regulares y copiarlas muchas veces trasladandolas encima.
-4. Funcion que agregue chainIDs a PDB creado por leap.
+3. Funcion que agregue chainIDs a PDB creado por leap.
+
+Mutations:
+
+1. At H6:
+  - H6R. FAD mutation.
+  - H6F. Positive to hydrophobic.
+  - H6N. Positive to hydrophilic.
+2. At D7:
+  - D7H. FAD mutation.
+  - D7N. FAD mutation.
+  - D7L. Negative to hydrophobic.
+3. At E11:
+  - E11K. FAD mutation.
+  - E11Q. Negative to hydrophilic.
+  - E11L. Negative to hydrophobic.
+4. At K16:
+  - K16N. FAD mutation.
+  - K16D. Positive to negative similar to N.
+  - K16L. Positive to hydrophobic.
+5. At A21:
+  - A21G. FAD mutation.
+  - A21V. Hydrophilic to hydrophilic.
+6. At E22:
+  - E22Q. FAD mutation.
+  - E22K. FAD mutation.
+  - E22G. FAD mutation.
+  - E22L. Hydrophobic is last remaining.
+7. At D23:
+  - D23N. FAD mutation.
+  - D23L. Negative to hydrophobic.
+  - D23N. Negative to positive.
+8. At L34:
+  - L34V. FAD mutation.
+  - L34I. Similar to L and V.
+  - L34T. Hydrophobic to hydrophilic.
+9. At A42:
+  - A42T. FAD mutation.
+  - A42G. Similar to A and T.
+  - A42V. Similar to A and T.
