@@ -379,7 +379,7 @@ def create_free_energy_dir(reswt_str, resmut_str, structure1, structure2):
     for x in ["2_submit_equilibration.slurm", "4_submit_production.slurm"]:
         solvate.replace_in_file(f'{new_dir}/{x}', replace_dict2)
     
-    for x in ["1_setup_equilibration.sh", "3_setup_simulations.sh"]:
+    for x in ["1_setup_equilibration.sh", "3_setup_simulations.sh", "5_combine_trajectories.sh"]:
         solvate.make_executable(f'{new_dir}/{x}')
 
 
