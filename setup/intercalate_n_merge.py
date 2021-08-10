@@ -187,36 +187,36 @@ def in_files_setup(structure1, structure2):
             positive_ions = 'Na+' in dual_topology.df['ATOM']['residue_name'].unique()
             if positive_ions:
                 ions = dual_topology.df['ATOM'][dual_topology.df['ATOM']['residue_name'] == 'Na+']
-                ions_masks = list(ions.loc[ions.index[[0, d_charge]], 'residue_number'])
+                ions_masks = list(ions.loc[ions.index[0:d_charge], 'residue_number'])
                 ions_masks = [str(x) for x in ions_masks]
                 ions_masks = ','.join(ions_masks)
-                ions_masks = ', ' + ions_masks
+                ions_masks = ',' + ions_masks
                 resmut_str += ions_masks
             negative_ions = 'Cl-' in dual_topology.df['ATOM']['residue_name'].unique()
             if negative_ions:
                 ions = dual_topology.df['ATOM'][dual_topology.df['ATOM']['residue_name'] == 'Cl-']
-                ions_masks = list(ions.loc[ions.index[[0, d_charge]], 'residue_number'])
+                ions_masks = list(ions.loc[ions.index[0:d_charge], 'residue_number'])
                 ions_masks = [str(x) for x in ions_masks]
                 ions_masks = ','.join(ions_masks)
-                ions_masks = ', ' + ions_masks
+                ions_masks = ',' + ions_masks
                 resmut_str += ions_masks
         if abs(charge1) > abs(charge2): #Get first charge1 - charge2 ions and add them to reswt_str
             d_charge = abs(charge1) - abs(charge2)
             positive_ions = 'Na+' in dual_topology.df['ATOM']['residue_name'].unique()
             if positive_ions:
                 ions = dual_topology.df['ATOM'][dual_topology.df['ATOM']['residue_name'] == 'Na+']
-                ions_masks = list(ions.loc[ions.index[[0, d_charge]], 'residue_number'])
+                ions_masks = list(ions.loc[ions.index[0:d_charge], 'residue_number'])
                 ions_masks = [str(x) for x in ions_masks]
                 ions_masks = ','.join(ions_masks)
-                ions_masks = ', ' + ions_masks
+                ions_masks = ',' + ions_masks
                 reswt_str += ions_masks
             negative_ions = 'Cl-' in dual_topology.df['ATOM']['residue_name'].unique()
             if negative_ions:
                 ions = dual_topology.df['ATOM'][dual_topology.df['ATOM']['residue_name'] == 'Cl-']
-                ions_masks = list(ions.loc[ions.index[[0, d_charge]], 'residue_number'])
+                ions_masks = list(ions.loc[ions.index[0:d_charge], 'residue_number'])
                 ions_masks = [str(x) for x in ions_masks]
                 ions_masks = ','.join(ions_masks)
-                ions_masks = ', ' + ions_masks
+                ions_masks = ',' + ions_masks
                 reswt_str += ions_masks
     elif charge1*charge2 < 0: #Get ions balancing charge of amyloid1 and add them to reswt_str. Get ions balancing charge amyloid2 and add them to resmut_str
         if charge1 < 0:
@@ -224,26 +224,26 @@ def in_files_setup(structure1, structure2):
             ions_masks = ions['residue_number'].tolist()
             ions_masks = [str(x) for x in ions_masks]
             ions_masks = ','.join(ions_masks)
-            ions_masks = ', ' + ions_masks
+            ions_masks = ',' + ions_masks
             reswt_str += ions_masks
             ions = dual_topology.df['ATOM'][dual_topology.df['ATOM']['residue_name'] == 'Cl-']
             ions_masks = ions['residue_number'].tolist()
             ions_masks = [str(x) for x in ions_masks]
             ions_masks = ','.join(ions_masks)
-            ions_masks = ', ' + ions_masks
+            ions_masks = ',' + ions_masks
             resmut_str += ions_masks
         if charge1 > 0:
             ions = dual_topology.df['ATOM'][dual_topology.df['ATOM']['residue_name'] == 'Cl-']
             ions_masks = ions['residue_number'].tolist()
             ions_masks = [str(x) for x in ions_masks]
             ions_masks = ','.join(ions_masks)
-            ions_masks = ', ' + ions_masks
+            ions_masks = ',' + ions_masks
             reswt_str += ions_masks
             ions = dual_topology.df['ATOM'][dual_topology.df['ATOM']['residue_name'] == 'Na+']
             ions_masks = ions['residue_number'].tolist()
             ions_masks = [str(x) for x in ions_masks]
             ions_masks = ','.join(ions_masks)
-            ions_masks = ', ' + ions_masks
+            ions_masks = ',' + ions_masks
             resmut_str += ions_masks
     elif charge1*charge2 == 0:
         if charge1 < 0:
@@ -251,28 +251,28 @@ def in_files_setup(structure1, structure2):
             ions_masks = ions['residue_number'].tolist()
             ions_masks = [str(x) for x in ions_masks]
             ions_masks = ','.join(ions_masks)
-            ions_masks = ', ' + ions_masks
+            ions_masks = ',' + ions_masks
             reswt_str += ions_masks
         if charge1 > 0:
             ions = dual_topology.df['ATOM'][dual_topology.df['ATOM']['residue_name'] == 'Cl-']
             ions_masks = ions['residue_number'].tolist()
             ions_masks = [str(x) for x in ions_masks]
             ions_masks = ','.join(ions_masks)
-            ions_masks = ', ' + ions_masks
+            ions_masks = ',' + ions_masks
             reswt_str += ions_masks
         if charge2 < 0:
             ions = dual_topology.df['ATOM'][dual_topology.df['ATOM']['residue_name'] == 'Na+']
             ions_masks = ions['residue_number'].tolist()
             ions_masks = [str(x) for x in ions_masks]
             ions_masks = ','.join(ions_masks)
-            ions_masks = ', ' + ions_masks
+            ions_masks = ',' + ions_masks
             resmut_str += ions_masks
         if charge2 > 0:
             ions = dual_topology.df['ATOM'][dual_topology.df['ATOM']['residue_name'] == 'Cl-']
             ions_masks = ions['residue_number'].tolist()
             ions_masks = [str(x) for x in ions_masks]
             ions_masks = ','.join(ions_masks)
-            ions_masks = ', ' + ions_masks
+            ions_masks = ',' + ions_masks
             resmut_str += ions_masks
         
 
