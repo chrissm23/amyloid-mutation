@@ -188,7 +188,7 @@ def in_files_setup(structure1, structure2):
             if positive_ions:
                 ions = dual_topology.df['ATOM'][dual_topology.df['ATOM']['residue_name'] == 'Na+']
                 ions_masks = list(ions.loc[ions.index[0:d_charge], 'residue_number'])
-                ions_masks = [str(x-(n_resids*nchains+len(chains))) for x in ions_masks]
+                ions_masks = [str(x-(n_resids*nchains-len(chains))) for x in ions_masks]
                 ions_masks = ','.join(ions_masks)
                 ions_masks = ',' + ions_masks
                 resmut_str += ions_masks
@@ -196,7 +196,7 @@ def in_files_setup(structure1, structure2):
             if negative_ions:
                 ions = dual_topology.df['ATOM'][dual_topology.df['ATOM']['residue_name'] == 'Cl-']
                 ions_masks = list(ions.loc[ions.index[0:d_charge], 'residue_number'])
-                ions_masks = [str(x-(n_resids*nchains+len(chains))) for x in ions_masks]
+                ions_masks = [str(x-(n_resids*nchains-len(chains))) for x in ions_masks]
                 ions_masks = ','.join(ions_masks)
                 ions_masks = ',' + ions_masks
                 resmut_str += ions_masks
@@ -206,7 +206,7 @@ def in_files_setup(structure1, structure2):
             if positive_ions:
                 ions = dual_topology.df['ATOM'][dual_topology.df['ATOM']['residue_name'] == 'Na+']
                 ions_masks = list(ions.loc[ions.index[0:d_charge], 'residue_number'])
-                ions_masks = [str(x-(n_resids*nchains+len(chains))) for x in ions_masks]
+                ions_masks = [str(x-(n_resids*nchains-len(chains))) for x in ions_masks]
                 ions_masks = ','.join(ions_masks)
                 ions_masks = ',' + ions_masks
                 reswt_str += ions_masks
@@ -214,7 +214,7 @@ def in_files_setup(structure1, structure2):
             if negative_ions:
                 ions = dual_topology.df['ATOM'][dual_topology.df['ATOM']['residue_name'] == 'Cl-']
                 ions_masks = list(ions.loc[ions.index[0:d_charge], 'residue_number'])
-                ions_masks = [str(x-(n_resids*nchains+len(chains))) for x in ions_masks]
+                ions_masks = [str(x-(n_resids*nchains-len(chains))) for x in ions_masks]
                 ions_masks = ','.join(ions_masks)
                 ions_masks = ',' + ions_masks
                 reswt_str += ions_masks
@@ -222,26 +222,26 @@ def in_files_setup(structure1, structure2):
         if charge1 < 0:
             ions = dual_topology.df['ATOM'][dual_topology.df['ATOM']['residue_name'] == 'Na+']
             ions_masks = ions['residue_number'].tolist()
-            ions_masks = [str(x-(n_resids*nchains+len(chains))) for x in ions_masks]
+            ions_masks = [str(x-(n_resids*nchains-len(chains))) for x in ions_masks]
             ions_masks = ','.join(ions_masks)
             ions_masks = ',' + ions_masks
             reswt_str += ions_masks
             ions = dual_topology.df['ATOM'][dual_topology.df['ATOM']['residue_name'] == 'Cl-']
             ions_masks = ions['residue_number'].tolist()
-            ions_masks = [str(x-(n_resids*nchains+len(chains))) for x in ions_masks]
+            ions_masks = [str(x-(n_resids*nchains-len(chains))) for x in ions_masks]
             ions_masks = ','.join(ions_masks)
             ions_masks = ',' + ions_masks
             resmut_str += ions_masks
         if charge1 > 0:
             ions = dual_topology.df['ATOM'][dual_topology.df['ATOM']['residue_name'] == 'Cl-']
             ions_masks = ions['residue_number'].tolist()
-            ions_masks = [str(x-(n_resids*nchains+len(chains))) for x in ions_masks]
+            ions_masks = [str(x-(n_resids*nchains-len(chains))) for x in ions_masks]
             ions_masks = ','.join(ions_masks)
             ions_masks = ',' + ions_masks
             reswt_str += ions_masks
             ions = dual_topology.df['ATOM'][dual_topology.df['ATOM']['residue_name'] == 'Na+']
             ions_masks = ions['residue_number'].tolist()
-            ions_masks = [str(x-(n_resids*nchains+len(chains))) for x in ions_masks]
+            ions_masks = [str(x-(n_resids*nchains-len(chains))) for x in ions_masks]
             ions_masks = ','.join(ions_masks)
             ions_masks = ',' + ions_masks
             resmut_str += ions_masks
@@ -249,28 +249,28 @@ def in_files_setup(structure1, structure2):
         if charge1 < 0:
             ions = dual_topology.df['ATOM'][dual_topology.df['ATOM']['residue_name'] == 'Na+']
             ions_masks = ions['residue_number'].tolist()
-            ions_masks = [str(x-(n_resids*nchains+len(chains))) for x in ions_masks]
+            ions_masks = [str(x-(n_resids*nchains-len(chains))) for x in ions_masks]
             ions_masks = ','.join(ions_masks)
             ions_masks = ',' + ions_masks
             reswt_str += ions_masks
         if charge1 > 0:
             ions = dual_topology.df['ATOM'][dual_topology.df['ATOM']['residue_name'] == 'Cl-']
             ions_masks = ions['residue_number'].tolist()
-            ions_masks = [str(x-(n_resids*nchains+len(chains))) for x in ions_masks]
+            ions_masks = [str(x-(n_resids*nchains-len(chains))) for x in ions_masks]
             ions_masks = ','.join(ions_masks)
             ions_masks = ',' + ions_masks
             reswt_str += ions_masks
         if charge2 < 0:
             ions = dual_topology.df['ATOM'][dual_topology.df['ATOM']['residue_name'] == 'Na+']
             ions_masks = ions['residue_number'].tolist()
-            ions_masks = [str(x-(n_resids*nchains+len(chains))) for x in ions_masks]
+            ions_masks = [str(x-(n_resids*nchains-len(chains))) for x in ions_masks]
             ions_masks = ','.join(ions_masks)
             ions_masks = ',' + ions_masks
             resmut_str += ions_masks
         if charge2 > 0:
             ions = dual_topology.df['ATOM'][dual_topology.df['ATOM']['residue_name'] == 'Cl-']
             ions_masks = ions['residue_number'].tolist()
-            ions_masks = [str(x-(n_resids*nchains+len(chains))) for x in ions_masks]
+            ions_masks = [str(x-(n_resids*nchains-len(chains))) for x in ions_masks]
             ions_masks = ','.join(ions_masks)
             ions_masks = ',' + ions_masks
             resmut_str += ions_masks
