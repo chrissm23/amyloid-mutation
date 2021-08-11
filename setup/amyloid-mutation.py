@@ -1,9 +1,4 @@
-import numpy as np
-import pandas as pd
 from biopandas.pdb import PandasPdb
-import fileinput
-from shutil import copyfile
-import os
 
 import amyloid
 import get_data

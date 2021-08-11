@@ -1,12 +1,9 @@
-from amyloid import Mutant
-import numpy as np
-import pandas as pd
 from biopandas.pdb import PandasPdb
 from shutil import copyfile
 import os
 import subprocess
 
-import get_data
+from amyloid import Mutant
 import solvate
 
 def recover_transformation_order(structure1, structure2):
@@ -177,8 +174,8 @@ def in_files_setup(structure1, structure2):
     resmut_str = ','.join(resmut)
     tiwt_sr = reswt_str
     timut_str = resmut_str
-    reswt_str += '&!@C,CA,N,O'
-    resmut_str += '&!@C,CA,N,O'
+    #reswt_str += '&!@C,CA,N,O'
+    #resmut_str += '&!@C,CA,N,O'
     #print(reswt_str)
     #print(resmut_str)
 
