@@ -177,8 +177,8 @@ def in_files_setup(structure1, structure2):
     resmut_str = ','.join(resmut)
     tiwt_sr = reswt_str
     timut_str = resmut_str
-    reswt_str = '&!@C,CA,N,O' + reswt_str
-    resmut_str = '&!@C,CA,N,O' + resmut_str
+    reswt_str += '&!@C,CA,N,O'
+    resmut_str += '&!@C,CA,N,O'
     #print(reswt_str)
     #print(resmut_str)
 
@@ -292,8 +292,8 @@ def in_files_setup(structure1, structure2):
             timut_str += ions_masks
         
     replace_dict = {
-        "tmask1": tiwt_sr,
-        "tmask2": timut_str,
+        "%tmask1%": tiwt_sr,
+        "%tmask2%": timut_str,
         "%smask1%": reswt_str,
         "%smask2%": resmut_str
     }
