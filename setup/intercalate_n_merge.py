@@ -172,7 +172,7 @@ def in_files_setup(structure1, structure2):
     reswt_str = ','.join(reswt)
     resmut = [f'{(i+1)*(n_resids + 1) - min(chains)}' for i in chains]
     resmut_str = ','.join(resmut)
-    tiwt_sr = reswt_str
+    tiwt_str = reswt_str
     timut_str = resmut_str
     #reswt_str += '&!@C,CA,N,O'
     #resmut_str += '&!@C,CA,N,O'
@@ -213,7 +213,7 @@ def in_files_setup(structure1, structure2):
                 ions_masks = ','.join(ions_masks)
                 ions_masks = '|:' + ions_masks
                 reswt_str += ions_masks
-                tiwt_sr += ions_masks
+                tiwt_str += ions_masks
             negative_ions = 'Cl-' in dual_topology.df['ATOM']['residue_name'].unique()
             if negative_ions:
                 ions = dual_topology.df['ATOM'][dual_topology.df['ATOM']['residue_name'] == 'Cl-']
@@ -222,7 +222,7 @@ def in_files_setup(structure1, structure2):
                 ions_masks = ','.join(ions_masks)
                 ions_masks = '|:' + ions_masks
                 reswt_str += ions_masks
-                tiwt_sr += ions_masks
+                tiwt_str += ions_masks
     elif charge1*charge2 < 0: #Get ions balancing charge of amyloid1 and add them to reswt_str. Get ions balancing charge amyloid2 and add them to resmut_str
         if charge1 < 0:
             ions = dual_topology.df['ATOM'][dual_topology.df['ATOM']['residue_name'] == 'Na+']
@@ -231,7 +231,7 @@ def in_files_setup(structure1, structure2):
             ions_masks = ','.join(ions_masks)
             ions_masks = '|:' + ions_masks
             reswt_str += ions_masks
-            tiwt_sr += ions_masks
+            tiwt_str += ions_masks
             ions = dual_topology.df['ATOM'][dual_topology.df['ATOM']['residue_name'] == 'Cl-']
             ions_masks = ions['residue_number'].tolist()
             ions_masks = [str(x-(n_resids*nchains-len(chains))) for x in ions_masks]
@@ -246,7 +246,7 @@ def in_files_setup(structure1, structure2):
             ions_masks = ','.join(ions_masks)
             ions_masks = '|:' + ions_masks
             reswt_str += ions_masks
-            tiwt_sr += ions_masks
+            tiwt_str += ions_masks
             ions = dual_topology.df['ATOM'][dual_topology.df['ATOM']['residue_name'] == 'Na+']
             ions_masks = ions['residue_number'].tolist()
             ions_masks = [str(x-(n_resids*nchains-len(chains))) for x in ions_masks]
@@ -262,7 +262,7 @@ def in_files_setup(structure1, structure2):
             ions_masks = ','.join(ions_masks)
             ions_masks = '|:' + ions_masks
             reswt_str += ions_masks
-            tiwt_sr += ions_masks
+            tiwt_str += ions_masks
         if charge1 > 0:
             ions = dual_topology.df['ATOM'][dual_topology.df['ATOM']['residue_name'] == 'Cl-']
             ions_masks = ions['residue_number'].tolist()
@@ -270,7 +270,7 @@ def in_files_setup(structure1, structure2):
             ions_masks = ','.join(ions_masks)
             ions_masks = '|:' + ions_masks
             reswt_str += ions_masks
-            tiwt_sr += ions_masks
+            tiwt_str += ions_masks
         if charge2 < 0:
             ions = dual_topology.df['ATOM'][dual_topology.df['ATOM']['residue_name'] == 'Na+']
             ions_masks = ions['residue_number'].tolist()
@@ -289,7 +289,7 @@ def in_files_setup(structure1, structure2):
             timut_str += ions_masks
         
     replace_dict = {
-        "%tmask1%": tiwt_sr,
+        "%tmask1%": tiwt_str,
         "%tmask2%": timut_str,
         "%smask1%": reswt_str,
         "%smask2%": resmut_str
@@ -317,7 +317,7 @@ def in_files_setup(structure1, structure2):
     copyfile('./minimization/run_minimization.slurm', f'{newdir}/run_minimization.slurm')
     solvate.replace_in_file(f'{newdir}/run_minimization.slurm', replace_dict2)
 
-    return [reswt_str, resmut_str, tiwt_sr, timut_str]
+    return [reswt_str, resmut_str, tiwt_str, timut_str]
 
 def get_boundary_chains(structure):
     num_to_alph = {
