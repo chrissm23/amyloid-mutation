@@ -177,8 +177,8 @@ def in_files_setup(structure1, structure2):
     resmut_str = ','.join(resmut)
     tiwt_sr = reswt_str
     timut_str = resmut_str
-    reswt_str = '&!@C,CA,N,O,H' + reswt_str
-    resmut_str = '&!@C,CA,N,O,H' + resmut_str
+    reswt_str = '&!@C,CA,N,O' + reswt_str
+    resmut_str = '&!@C,CA,N,O' + resmut_str
     #print(reswt_str)
     #print(resmut_str)
 

@@ -9,7 +9,7 @@ parmed=$AMBERHOME/bin/parmed
 $parmed ./%dir%/dual_topology_ions.parm7 <<_EOF
 loadRestrt ./%dir%/dual_topology_ions.rst7
 setOverwrite True
-tiMerge :%chains_WT% :%chains_MUT% :%resids_WT%&!@C,CA,N,O,H :%resids_MUT%&!@C,CA,N,O,H
+tiMerge :%chains_WT% :%chains_MUT% :%resids_WT%&!@C,CA,N,O :%resids_MUT%&!@C,CA,N,O
 outparm ./%dir%/merged_topology.parm7 ./%dir%/merged_topology.rst7
 quit
 _EOF
