@@ -1,9 +1,4 @@
-import numpy as np
-import pandas as pd
 from biopandas.pdb import PandasPdb
-import fileinput
-from shutil import copyfile
-import os
 
 import amyloid
 import get_data
@@ -51,9 +46,9 @@ for index, value in enumerate(order):
     solvate.strip(structure1, structure2)
     solvate.solvate_ions_pair(structure1, structure2)
 
-    # Intercalate and merged structures
+    # Intercalate and merge structures
     intercalate_n_merge.intercalate(structure1, structure2)
     intercalate_n_merge.merge(structure1, structure2)
-    [reswt_str, resmut_str] = intercalate_n_merge.in_files_setup(structure1, structure2)
+    [reswt_str, resmut_str, tiwt_str, timut_str] = intercalate_n_merge.in_files_setup(structure1, structure2)
     
-    intercalate_n_merge.create_free_energy_dir(reswt_str, resmut_str, structure1, structure2)
+    intercalate_n_merge.create_free_energy_dir(reswt_str, resmut_str, tiwt_str, timut_str, structure1, structure2)
