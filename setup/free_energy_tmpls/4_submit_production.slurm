@@ -24,7 +24,7 @@ for i in "${!windows[@]}"; do
   echo "lambda = ${windows[$i]}"
 
   echo "Running MD..."
-  pmemd.cuda -i ti.in -c ti.rst7 -p ti.parm7 \
+  pmemd.cuda -i ti.in -c ti.rst7 -ref ti.rst7 -p ti.parm7 \
   -O -o ti001.out -inf ti001.info -e ti001.en -r ti001.rst7 -x ti001.nc \
   -l ti001.log
 
